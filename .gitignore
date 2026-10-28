@@ -1,0 +1,29 @@
+# Generated builds and local runtime data
+**/target/
+**/.local/
+*.log
+**/__pycache__/
+*.py[cod]
+
+# Editor and operating-system files
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Local migration tool output
+.github/modernize/
+
+# Personal recording and submission preparation (keep locally)
+/docs/LOOM_SCRIPT.md
+/docs/LOOM_SCRIPT.docx
+/docs/LOOM_OUTLINE.md
+/docs/SUBMISSION_EMAIL.md
+
+# Credentials and local overrides
+.env
+.env.*
+!.env.example
+*.pem
+*.key
