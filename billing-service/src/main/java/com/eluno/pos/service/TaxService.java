@@ -15,11 +15,12 @@ public class TaxService {
             String hsn,
             LocalDate billingDate,
             List<TaxRateDto> taxRates) {
-        List<TaxRateDto> matchingRates = taxRates.stream()
-                .filter(rate -> rate.getHsn().equals(hsn))
-                .filter(rate -> !billingDate.isBefore(rate.getFrom()))
-                .filter(rate -> rate.getTo() == null || !billingDate.isAfter(rate.getTo()))
-                .toList();
+        List<TaxRateDto> matchingRates =
+                taxRates.stream()
+                        .filter(rate -> rate.getHsn().equals(hsn))
+                        .filter(rate -> !billingDate.isBefore(rate.getFrom()))
+                        .filter(rate -> rate.getTo() == null || !billingDate.isAfter(rate.getTo()))
+                        .toList();
 
         if (matchingRates.size() != 1) {
             throw new BillingValidationException(
@@ -33,8 +34,9 @@ public class TaxService {
             throw new BillingValidationException("GST rate cannot be negative");
         }
 
-        long taxablePaise = MoneyUtils.multiplyAndDivideWithRounding(
-                inclusivePricePaise, 10000, 10000L + rateBasisPoints);
+        long taxablePaise =
+                MoneyUtils.multiplyAndDivideWithRounding(
+                        inclusivePricePaise, 10000, 10000L + rateBasisPoints);
         long totalTaxPaise = inclusivePricePaise - taxablePaise;
         long cgstPaise = MoneyUtils.multiplyAndDivideWithRounding(totalTaxPaise, 1, 2);
 

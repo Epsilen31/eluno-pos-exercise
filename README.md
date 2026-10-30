@@ -1,6 +1,6 @@
-# Eluno Till — Spring Boot assignment
+# Eluno POS — Spring Boot assignment
 
-A local REST API replacing the billing slice of Shopify POS. Shopify remains the source of truth. No Shopify account, frontend, Docker or paid service is required.
+A local REST API replacing the billing slice of Shopify POS. Shopify remains the source of truth. A browser/tablet UI is included; no Shopify account or paid service is required for local use.
 
 The Spring Boot application is entirely inside **`billing-service/`**. Open that folder as the Java/Maven project in your IDE. The outer folder contains the assignment pack, demo launcher, and submission documents.
 
@@ -23,7 +23,7 @@ eluno-pos-exercise/
 └── run.py                       # Starts the mock and nested application
 ```
 
-Read [the stakeholder reply](STAKEHOLDER_REPLY.md) first. The email says **72 hours**, while the supplied pack says **48**; confirm the deadline with the sender.
+Read [the stakeholder reply](STAKEHOLDER_REPLY.md) first. The revised brief requires the repository, stakeholder reply and Loom by the email deadline; the UI and hosted mock demo may follow within 24 hours of that email. The email timestamp is not available here.
 
 ## Run
 
@@ -161,7 +161,7 @@ Code uses four-space Java formatting with explicit imports. `.editorconfig` supp
 
 **Implemented:** all seven Must flows; channel metadata/reporting, basic printable HTML invoice, operation audit, multiple pairs for one patient, cancellations and operator-assisted payment recovery.
 
-**Deferred:** cash-drawer sessions/paid-ins/paid-outs/variance, partial refunds, remakes, multi-patient family billing, automated email, AI stretch and UI. No Shopify/webhook/clinical/terminal production integration or deployment is claimed.
+**Deferred:** cash-drawer sessions/paid-ins/paid-outs/variance, partial refunds, remakes, multi-patient family billing, automated email, AI stretch . No Shopify/webhook/clinical/terminal production integration is claimed. Hosting configuration is included; a live deployment has not yet been verified.
 
 Known limits:
 
@@ -173,3 +173,27 @@ Known limits:
 6. H2 file mode is for one local process, not seven production stores. Multiple nodes need a shared transactional database with unique checkout keys, locking/outbox coordination and a reconciler. Legal invoice fields, registration/address details and tax policy require Finance review; HTML is an exercise invoice, not a certified production document.
 
 See the [implementation walkthrough](docs/IMPLEMENTATION_GUIDE.md) and [AI usage disclosure](AI_USAGE.md).
+
+## Browser UI and revised delivery
+
+Run `python run.py`, then open **http://localhost:8080** on the same computer. The responsive screen calls the existing API for customer/Rx lookup, up to ten frame/lens pairs, validation, offer explanations, inclusive tax, payment, printable invoice, full refund and IST day-end reporting. Choose a store and salesperson, look up a mock phone, select products, validate, review payable and charge. Refund the newly created order; seed orders lack live terminal charges. Pending operations retain their reference in browser storage and can be refreshed/resumed. Only COMPLETED confirms success. After completing a refund, select Start next sale.
+
+For tablet access on your LAN, set `SERVER_ADDRESS=0.0.0.0` before starting and use the computer's LAN address and port. This demo checks claimed staff roles but has no login: use synthetic data only.
+
+### Free-tier hosting
+
+`Dockerfile` packages the Java application and unchanged Python mock together. `render.yaml` describes one free Docker web service. Push this checkout to your repository, create a Render Blueprint from it, select the free plan and deploy. The health path is `/api/health`; the browser UI is `/`. The launcher uses Render's PORT and binds the app to all interfaces. No separate mock URL or database service is required.
+
+The mock and its paired H2 ledger reset together on each container start; demo data is ephemeral. Free hosting can sleep and take time to wake. This is a single-instance exercise deployment. Container execution and a live hosted URL have not been verified in this workspace (Docker's daemon is unavailable and no hosting account is connected).
+
+### AI assistance in this revision
+
+AI helped build the browser forms against the existing Java API, preserve operation references across refreshes, and prepare deployment files. Earlier AI assumptions about the mock's HTTP body handling and shared test stock were wrong; integration runs exposed both. I treat generated code and deployment configuration as work to verify, not evidence that a hosted service works. The fuller history is in [AI_USAGE.md](AI_USAGE.md). This note was AI-drafted; I need to review and personalize it before submission.
+
+### Verification of this revision
+
+All 27 Java tests passed against the supplied mock. Packaging and Spotless verification passed after formatting TaxService (no calculation changes). `node scripts/ui-smoke.mjs http://localhost:8082` drove headless Edge through customer lookup, missing-ADD rejection, offers/quote, charge, page-reload recovery, full refund and day-end report, and checked for horizontal overflow at tablet width. Start a separate fresh app/mock session on that port first (`python run.py --port 8082 --mock-port 8789`). The script defaults to Edge on Windows; set UI_BROWSER to another Chromium executable when needed. The API demo also passed with flaky upstream responses enabled. Docker execution and hosted behavior remain unverified.
+
+## Recording guide
+
+Follow [the step-by-step recording script](RECORDING_SCRIPT.md) for preparation, what to say, exact browser clicks and what to show in the code walkthrough. Target 6?7 minutes; the maximum is eight minutes.

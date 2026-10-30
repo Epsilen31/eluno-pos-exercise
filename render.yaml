@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: eluno-till-demo
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: SERVER_ADDRESS
+        value: 0.0.0.0

@@ -89,7 +89,7 @@ def main():
             wait_for("http://localhost:%s/api/health" % args.port, app)
             info = dict(api="http://localhost:%s" % args.port, database=str(database), logs=str(session))
             (ROOT / ".local/current-session.json").write_text(json.dumps(info, indent=2), encoding="utf-8")
-            print("\nEluno Till ready: " + info["api"], flush=True)
+            print("\nEluno POS ready: " + info["api"], flush=True)
             print("Run in a second terminal: python scripts/demo.py", flush=True)
             print("Database: " + str(database), flush=True)
             print("Logs: " + str(session), flush=True)

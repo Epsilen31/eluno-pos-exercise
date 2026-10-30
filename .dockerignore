@@ -1,0 +1,7 @@
+.git
+.local
+**/target
+**/__pycache__
+.agents
+.codex
+.aws

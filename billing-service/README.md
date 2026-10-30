@@ -13,6 +13,8 @@ Stack: Java 21, Spring Boot, Spring Web, Bean Validation, Lombok, Spring Data JP
 python ../run.py
 ```
 
+Open http://localhost:8080 for the browser/tablet till UI.
+
 From another terminal at the outer assignment root, run `python scripts/demo.py`.
 
 DTOs are Lombok JavaBean classes. Entities are separate `@Entity` classes, and Spring Data repositories extend `JpaRepository`. The local database contains operations, invoice counters and audit events; Shopify remains authoritative for orders/customers/inventory/payments/refunds.

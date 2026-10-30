@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Eluno POS | Point of Sale</title>
+    <link rel="stylesheet" href="/till.css" />
+    <script src="/till.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Eluno POS</h1>
+      <p>Mock store · Billing, returns and reconciliation</p>
+    </header>
+    <main>
+      <p id="status" role="status" aria-live="polite">
+        Loading stores and catalogue…
+      </p>
+      <section>
+        <h2>1. Store and customer</h2>
+        <div class="grid">
+          <label>Store<select id="store"></select></label
+          ><label>Salesperson<select id="staff"></select></label
+          ><label
+            >Customer phone<input id="phone" type="tel" value="+919000000005"
+          /></label>
+        </div>
+        <button id="lookup">Find customer & prescription</button>
+        <pre id="customer">Look up a customer before billing.</pre>
+      </section>
+      <section id="cartSection">
+        <h2>2. Cart and lens validation</h2>
+        <div id="pairs"></div>
+        <button id="addPair">Add pair</button>
+        <div class="grid">
+          <label
+            >Channel<select id="channel">
+              <option value="walk_in">Walk in</option>
+              <option value="whatsapp_booked">WhatsApp booked</option>
+              <option value="online_pickup">Online pickup</option>
+            </select></label
+          ><label
+            >Payment<select id="payment">
+              <option value="upi">UPI</option>
+              <option value="card">Card</option>
+              <option value="cash">Cash</option>
+            </select></label
+          >
+        </div>
+        <details>
+          <summary>Manager discount request</summary>
+          <div class="grid">
+            <label
+              >Discount % (max 10)<input
+                id="discount"
+                type="number"
+                min="0"
+                max="10"
+                step="0.01"
+                value="0" /></label
+            ><label>Approving manager<select id="manager"></select></label
+            ><label>Reason<input id="discountReason" maxlength="100" /></label>
+          </div>
+        </details>
+        <button id="quote">Validate cart & find offers</button>
+        <div id="quoteResult"></div>
+        <button id="charge" disabled>Charge & create invoice</button>
+      </section>
+      <section>
+        <h2>3. Sale and refund</h2>
+        <p>
+          Only COMPLETED confirms a sale or refund. Pending operations must be
+          resolved before starting another payment.
+        </p>
+        <pre id="operation">No operation selected.</pre>
+        <button id="refreshOperation" disabled>Refresh operation</button
+        ><button id="resume" disabled>Resume safely</button
+        ><a id="invoice" hidden target="_blank" rel="noopener"
+          >Open printable invoice</a
+        ><button id="newSale">Start next sale</button>
+        <div class="grid">
+          <label>Order ID<input id="orderId" inputmode="numeric" /></label
+          ><label
+            >Refund reason<input
+              id="refundReason"
+              value="CUSTOMER_RETURN"
+              maxlength="100"
+          /></label>
+        </div>
+        <button id="loadOrder">View order</button
+        ><button id="refund">Full refund</button>
+        <pre id="order"></pre>
+      </section>
+      <section>
+        <h2>4. Day-end report</h2>
+        <label>IST date<input id="reportDate" type="date" /></label
+        ><button id="report">Load day-end report</button>
+        <div id="reportResult"></div>
+      </section>
+    </main>
+    <footer>
+      Exercise environment. Use mock customers only. Demo data resets when
+      hosting restarts.
+    </footer>
+  </body>
+</html>

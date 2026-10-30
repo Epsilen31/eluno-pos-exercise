@@ -11,3 +11,5 @@ The automated tests include actual mock calls, exact tax fixtures, offer/refund 
 Before submitting, the candidate should review and personalize the stakeholder reply, run tests/demo independently, and be able to explain the calculation and recovery code. Add your own review changes and any remaining concerns here. Do not claim the generated work was written without AI assistance.
 
 Following the candidate's feedback, the agent reorganized the application into `billing-service/`, replaced record DTOs with Lombok JavaBeans, and replaced the JDBC ledger with JPA/Hibernate entities and repositories. Additional tests exercise actual JPA persistence and rollback behavior. These framework choices reflect the candidate's preferred Spring Boot conventions; they do not change Shopify's role as the system of record.
+
+The revised UI, Docker/Render configuration and delivery documents were also drafted by the AI agent. The UI reuses the existing server validation and calculation services. A generated hosting manifest is not a verified deployment, and the candidate still needs to record their own Loom and review the first-person README note.
