@@ -10,6 +10,8 @@ WORKDIR /app
 COPY --from=build /build/target/till-1.0.0.jar billing-service/target/till-1.0.0.jar
 COPY starter-kit starter-kit
 COPY run.py run.py
+COPY scripts/start_mock.py scripts/start_mock.py
 ENV SERVER_ADDRESS=0.0.0.0
-EXPOSE 8080
-CMD ["sh", "-c", "python3 run.py --no-build --port ${PORT:-8080}"]
+ENV JAVA_TOOL_OPTIONS="-Xms64m -Xmx256m"
+EXPOSE 10000
+CMD ["sh", "-c", "exec python3 run.py --no-build --console-logs --startup-timeout 180 --port ${PORT:-10000}"]

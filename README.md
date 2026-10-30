@@ -197,3 +197,7 @@ All 27 Java tests passed against the supplied mock. Packaging and Spotless verif
 ## Recording guide
 
 Follow [the step-by-step recording script](RECORDING_SCRIPT.md) for preparation, what to say, exact browser clicks and what to show in the code walkthrough. Target 6?7 minutes; the maximum is eight minutes.
+
+### Render startup troubleshooting
+
+The managed mock is started through `scripts/start_mock.py`, which binds it to 127.0.0.1 without changing the supplied mock source. Only Spring Boot binds publicly. The Blueprint pins PORT to 10000; Docker allows 180 seconds for startup, caps Java heap at 256 MB and streams child-process logs into the hosting console. If a deploy fails, inspect the Java exception or memory termination in Render Logs. A successful image build alone does not verify application readiness.

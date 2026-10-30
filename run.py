@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """One-command local launcher. Application logic is Java; this only manages processes."""
 import argparse
+from contextlib import ExitStack
 import datetime
 import json
 import os
@@ -45,9 +46,13 @@ def main():
     parser.add_argument("--mock-port", type=int, default=8787)
     parser.add_argument("--no-flake", action="store_true")
     parser.add_argument("--no-build", action="store_true")
+    parser.add_argument("--startup-timeout", type=int, default=60, help="Seconds to allow each service to start")
+    parser.add_argument("--console-logs", action="store_true", help="Send child logs to the hosting console")
     parser.add_argument("--external-mock", action="store_true", help="Keep an independently running mock; permits app restarts")
     parser.add_argument("--database", help="Existing/new H2 file path; only with --external-mock")
     args = parser.parse_args()
+    if args.startup_timeout < 1:
+        parser.error("--startup-timeout must be positive")
     if args.database and not args.external_mock:
         parser.error("--database requires --external-mock: never reuse a ledger against a freshly reset mock")
     os.chdir(ROOT)
@@ -75,18 +80,21 @@ def main():
                POS_DATABASE="jdbc:h2:file:%s;DB_CLOSE_ON_EXIT=FALSE" % database.as_posix())
     children = []
     try:
-        with (session / "mock.log").open("w", encoding="utf-8") as mock_log, (session / "app.log").open("w", encoding="utf-8") as app_log:
+        with ExitStack() as stack:
+            mock_log = None if args.console_logs else stack.enter_context((session / "mock.log").open("w", encoding="utf-8"))
+            app_log = None if args.console_logs else stack.enter_context((session / "app.log").open("w", encoding="utf-8"))
             mock = None
             if not args.external_mock:
-                command = [sys.executable, "starter-kit/mock-apis/mock_server.py", "--port", str(args.mock_port)]
+                command = [sys.executable, "-u", "scripts/start_mock.py", "--port", str(args.mock_port)]
                 if args.no_flake:
                     command.append("--no-flake")
                 mock = subprocess.Popen(command, stdout=mock_log, stderr=subprocess.STDOUT)
                 children.append(mock)
-            wait_for(env["POS_UPSTREAM"] + "/health", mock)
+            wait_for(env["POS_UPSTREAM"] + "/health", mock, timeout=args.startup_timeout)
+            print("Starting Eluno POS on port %s (startup timeout: %ss)" % (args.port, args.startup_timeout), flush=True)
             app = subprocess.Popen(["java", "-jar", str(jar)], env=env, stdout=app_log, stderr=subprocess.STDOUT)
             children.append(app)
-            wait_for("http://localhost:%s/api/health" % args.port, app)
+            wait_for("http://localhost:%s/api/health" % args.port, app, timeout=args.startup_timeout)
             info = dict(api="http://localhost:%s" % args.port, database=str(database), logs=str(session))
             (ROOT / ".local/current-session.json").write_text(json.dumps(info, indent=2), encoding="utf-8")
             print("\nEluno POS ready: " + info["api"], flush=True)
