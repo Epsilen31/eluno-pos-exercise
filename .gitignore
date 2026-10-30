@@ -16,6 +16,8 @@ Thumbs.db
 .github/modernize/
 
 # Personal recording and submission preparation (keep locally)
+/RECORDING_SCRIPT.md
+/RECORDING_SCRIPT.docx
 /docs/LOOM_SCRIPT.md
 /docs/LOOM_SCRIPT.docx
 /docs/LOOM_OUTLINE.md
